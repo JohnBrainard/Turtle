@@ -1,0 +1,22 @@
+<component name="ArtifactManager">
+  <artifact type="javafx" build-on-make="true" name="Turtle!">
+    <output-path>$PROJECT_DIR$/out/artifacts/Turtle_</output-path>
+    <properties id="javafx-properties">
+      <options>
+        <option name="appClass" value="com.brainardphotography.turtle.TurtleApplication" />
+        <option name="description" value="" />
+        <option name="htmlParamFile" value="" />
+        <option name="nativeBundle" value="dmg" />
+        <option name="paramFile" value="" />
+        <option name="title" value="" />
+        <option name="vendor" value="" />
+      </options>
+    </properties>
+    <root id="root">
+      <element id="archive" name="JavaFXApp.jar">
+        <element id="module-output" name="Turtle" />
+      </element>
+      <element id="library" level="application" name="groovy-2.2.1" />
+    </root>
+  </artifact>
+</component>
