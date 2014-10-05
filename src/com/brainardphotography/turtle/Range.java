@@ -86,4 +86,16 @@ public class Range implements Iterator<Double> {
 				step,
 				current);
 	}
+
+	public Range copy() {
+		return new Range(this);
+	}
+
+	private Range(Range range) {
+		this.from = range.from;
+		this.to = range.to;
+		this.step = range.step;
+		this.steps = range.steps;
+		this.current = range.current;
+	}
 }
