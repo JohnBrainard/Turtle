@@ -1,10 +1,6 @@
 package com.brainardphotography.turtle;
 
-import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
-import groovy.util.GroovyScriptEngine;
-import groovy.util.ResourceException;
-import groovy.util.ScriptException;
 import org.codehaus.groovy.control.CompilerConfiguration;
 
 import java.io.File;

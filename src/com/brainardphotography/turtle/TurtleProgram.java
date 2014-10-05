@@ -1,8 +1,5 @@
 package com.brainardphotography.turtle;
 
-import groovy.lang.Binding;
-import groovy.util.GroovyScriptEngine;
-import org.codehaus.groovy.ant.Groovy;
 
 import java.io.IOException;
 

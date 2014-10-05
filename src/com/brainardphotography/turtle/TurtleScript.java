@@ -1,10 +1,6 @@
 package com.brainardphotography.turtle;
 
 import groovy.lang.Script;
-import org.codehaus.groovy.control.CompilationFailedException;
-
-import java.io.File;
-import java.io.IOException;
 
 /**
  * Created by johnbrainard on 10/4/14.
