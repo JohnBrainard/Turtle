@@ -12,6 +12,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
@@ -50,7 +51,7 @@ public class TurtleController implements Initializable {
 
 	AnimationTimer animationTimer;
 
-	private Turtle turtle = new Turtle();
+	private Turtle turtle;
 	private TurtleProgram program = null;
 	private List<TurtleObject> turtleObjects;
 
@@ -61,6 +62,8 @@ public class TurtleController implements Initializable {
 		stopButton.disableProperty().bind(BooleanExpression.booleanExpression(runningProperty).not());
 
 		turtleObjects = Lists.newArrayList();
+
+		turtle = new Turtle(50.0, 50.0);
 		turtle.setObjectConsumer(object -> turtleObjects.add(object));
 
 		draw(canvas.getGraphicsContext2D());
@@ -77,8 +80,7 @@ public class TurtleController implements Initializable {
 		if (animationTimer != null)
 			animationTimer.stop();
 
-		turtleObjects.clear();
-		turtle.reset();
+		resetScene();
 
 		animationTimer = new AnimationTimer() {
 			@Override
@@ -90,7 +92,9 @@ public class TurtleController implements Initializable {
 		animationTimer.start();
 		runningProperty.setValue(true);
 
-		new Thread(this.program).start();
+		Thread thread = new Thread(this.program);
+		thread.setDaemon(true);
+		thread.start();
 	}
 
 	@FXML
@@ -121,19 +125,43 @@ public class TurtleController implements Initializable {
 		TurtleApplication.getInstance().getStage().close();
 	}
 
+	public void resetScene() {
+		this.turtle.reset(50.0, 50.0);
+		this.turtleObjects.clear();
+
+		double wallHeight = canvas.getHeight() / 2 - 100;
+
+		turtleObjects.add(new Wall(canvas.getWidth() / 2 - 20, 0, 40, wallHeight));
+		turtleObjects.add(new Wall(canvas.getWidth() / 2 - 20, canvas.getHeight() - wallHeight, 40, wallHeight));
+//		turtleObjects.add(Wall.randomWall(canvas));
+	}
+
 	private void draw(GraphicsContext gc) {
 		gc.setFill(Color.BLACK);
 		gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
 		gc.save();
-		gc.translate(canvas.getWidth() / 2, canvas.getHeight() / 2);
 
 		for (TurtleObject object : turtleObjects) {
+			object.updatePosition(rect -> checkRect(rect));
 			object.draw(gc);
 		}
 
+		turtle.updatePosition(rect -> checkRect(rect));
 		turtle.draw(gc);
 		gc.restore();
+	}
+
+	private boolean checkRect(Rectangle2D rect) {
+		Rectangle2D canvasRect = new Rectangle2D(0, 0, canvas.getWidth(), canvas.getHeight());
+
+		if (!canvasRect.contains(rect))
+			return false;
+
+		if (turtleObjects.stream().anyMatch(o -> o.getRect() != null && o.getRect().intersects(rect)))
+			return false;
+
+		return true;
 	}
 
 	private void scriptPropertyChanged(ObservableValue<? extends File> observableValue, File oldValue, File newValue) {

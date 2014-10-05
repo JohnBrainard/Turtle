@@ -1,5 +1,6 @@
 package com.brainardphotography.turtle;
 
+import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -7,42 +8,68 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Transform;
 
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * Created by johnbrainard on 10/4/14.
  */
-public class Turtle extends Canvas {
+public class Turtle extends TurtleObject {
 	private Range moveRange = Range.emptyRange();
 	private Range angleRange = Range.emptyRange();
 	private double x;
 	private double y;
+	private double angle;
+	private double width;
+	private double height;
 
 	private Image turtle;
 	private Consumer<TurtleObject> objectConsumer;
 
-	public Turtle() {
+	public Turtle(double x, double y) {
 		turtle = new Image(getClass().getResourceAsStream("Turtle@2x.png"));
+
+		this.x = x;
+		this.y = y;
+		this.width = turtle.getWidth();
+		this.height = turtle.getHeight();
 	}
 
 	public void setObjectConsumer(Consumer<TurtleObject> objectConsumer) {
 		this.objectConsumer = objectConsumer;
 	}
 
-	public void draw(GraphicsContext gc) {
-		double width = turtle.getWidth();
-		double height = turtle.getHeight();
+	@Override
+	public void updatePosition(Predicate<Rectangle2D> predicate) {
+		Range moveRange = this.moveRange.copy();
+		Range angleRange = this.angleRange.copy();
 
-		double angle = angleRange.getCurrent();
-		angle = angleRange.nextOrCurrent();
+		double newX = x;
+		double newY = y;
+		double newAngle = angleRange.nextOrCurrent();
 		if (moveRange.hasNext()) {
-			double r = Math.toRadians(angle);
-			x = x + Math.sin(r) * moveRange.getStepAmount();
-			y = y + Math.cos(r) * moveRange.getStepAmount();
+			double r = Math.toRadians(newAngle);
+			newX = x + Math.sin(r) * moveRange.getStepAmount();
+			newY = y + Math.cos(r) * moveRange.getStepAmount();
+
 			moveRange.next();
 		}
 
-		gc.save();
+		Rectangle2D position = new Rectangle2D(x - width / 2, y - height / 2, width, height);
+		if (predicate.test(position)) {
+			x = newX;
+			y = newY;
+			angle = newAngle;
+			this.moveRange = moveRange;
+			this.angleRange = angleRange;
+		} else {
+			this.moveRange = Range.emptyRange();
+			this.angleRange = Range.emptyRange();
+			System.out.println("Can't go there!:(");
+		}
+	}
 
+	public void draw(GraphicsContext gc) {
+		gc.save();
 		Rotate r = Transform.rotate(-angle, x, y);
 		gc.transform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
 
@@ -79,10 +106,10 @@ public class Turtle extends Canvas {
 		objectConsumer.accept(new TurtlePoop(x, y));
 	}
 
-	public void reset() {
+	public void reset(double x, double y) {
 		moveRange = Range.emptyRange();
 		angleRange = Range.emptyRange();
-		x = 0;
-		y = 0;
+		this.x = x;
+		this.y = y;
 	}
 }
