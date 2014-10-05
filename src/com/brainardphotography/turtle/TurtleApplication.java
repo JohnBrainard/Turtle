@@ -1,6 +1,7 @@
 package com.brainardphotography.turtle;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -34,6 +35,16 @@ public class TurtleApplication extends Application {
         primaryStage.show();
 	}
 
+	public void showErrorMessage(Exception exception) {
+		ErrorMessageDialog messageDialog = new ErrorMessageDialog(stage);
+		messageDialog.setTitle(exception.getMessage());
+		messageDialog.setMessage(exception.toString());
+		messageDialog.show();
+	}
+
+	public void showErrorMessageSafe(Exception exception) {
+		Platform.runLater(() -> showErrorMessage(exception));
+	}
 
     public static void main(String[] args) {
         launch(args);

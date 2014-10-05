@@ -2,6 +2,7 @@ package com.brainardphotography.turtle;
 
 import com.beust.jcommander.internal.Lists;
 import javafx.animation.AnimationTimer;
+import javafx.application.Application;
 import javafx.beans.binding.BooleanExpression;
 import javafx.beans.binding.ObjectExpression;
 import javafx.beans.property.BooleanProperty;
@@ -20,6 +21,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -84,6 +86,7 @@ public class TurtleController implements Initializable {
 				draw(canvas.getGraphicsContext2D());
 			}
 		};
+
 		animationTimer.start();
 		runningProperty.setValue(true);
 
@@ -104,8 +107,10 @@ public class TurtleController implements Initializable {
 		fileChooser.setTitle("Open Groovy Script");
 		File file = fileChooser.showOpenDialog(TurtleApplication.getInstance().getStage());
 
-		if (file != null && file.exists())
+		if (file != null && file.exists()) {
 			this.program = new GroovyTurtleProgram(this.turtle, file);
+			this.program.setErrorConsumer(exception -> TurtleApplication.getInstance().showErrorMessageSafe(exception));
+		}
 
 		scriptProperty.setValue(file);
 	}

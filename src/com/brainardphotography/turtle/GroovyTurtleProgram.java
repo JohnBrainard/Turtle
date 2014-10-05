@@ -26,8 +26,8 @@ public class GroovyTurtleProgram extends TurtleProgram {
 		shell.setVariable("turtle", getTurtle());
 		try {
 			shell.run(scriptLocation, new String[] {});
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			handleError(e);
 		}
 	}
 }
