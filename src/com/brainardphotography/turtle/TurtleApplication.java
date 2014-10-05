@@ -29,7 +29,7 @@ public class TurtleApplication extends Application {
 		this.stage = primaryStage;
 
         Parent root = FXMLLoader.load(getClass().getResource("Turtle.fxml"));
-        primaryStage.setTitle("Hello World");
+        primaryStage.setTitle("Turtle!");
 		primaryStage.setScene(new Scene(root));
 		primaryStage.setResizable(false);
         primaryStage.show();
