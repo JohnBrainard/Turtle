@@ -16,11 +16,7 @@
 						<Font name="System Bold" size="24.0"/>
 					</font>
 				</Label>
-				<Label fx:id="titleLabel" text="">
-					<font>
-						<Font size="24.0"/>
-					</font>
-				</Label>
+
 			</items>
 		</ToolBar>
 	</top>
@@ -28,7 +24,7 @@
 		<TextArea fx:id="messageArea" editable="false" prefHeight="200.0" prefWidth="200.0" promptText="Error message"
 				  BorderPane.alignment="CENTER">
 			<font>
-				<Font size="18.0"/>
+				<Font size="12.0"/>
 			</font>
 		</TextArea>
 	</center>

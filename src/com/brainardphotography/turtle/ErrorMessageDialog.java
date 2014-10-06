@@ -22,11 +22,10 @@ public class ErrorMessageDialog implements Initializable {
 	private final Stage primaryStage;
 	private final Stage dialogStage;
 
-	private StringProperty titleProperty = new SimpleStringProperty("Error");
 	private StringProperty messageProperty = new SimpleStringProperty("Error Message");
 
 	@FXML
-	Label titleLabel;
+	TextArea titleLabel;
 
 	@FXML
 	TextArea messageArea;
@@ -35,7 +34,7 @@ public class ErrorMessageDialog implements Initializable {
 		this.primaryStage = primaryStage;
 
 		dialogStage = new Stage();
-		dialogStage.setResizable(false);
+		dialogStage.setResizable(true);
 		dialogStage.initOwner(primaryStage);
 		dialogStage.centerOnScreen();
 
@@ -51,20 +50,8 @@ public class ErrorMessageDialog implements Initializable {
 		dialogStage.setScene(new Scene(root));
 	}
 
-	public StringProperty titleProperty() {
-		return titleProperty;
-	}
-
 	public StringProperty messageProperty() {
 		return messageProperty;
-	}
-
-	public String getTitle() {
-		return titleProperty.getValue();
-	}
-
-	public void setTitle(String value) {
-		titleProperty.setValue(value);
 	}
 
 	public String getMessage() {
@@ -77,7 +64,6 @@ public class ErrorMessageDialog implements Initializable {
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
-		titleLabel.textProperty().bind(titleProperty);
 		messageArea.textProperty().bind(messageProperty);
 	}
 

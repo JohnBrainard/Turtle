@@ -7,6 +7,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 public class TurtleApplication extends Application {
 	private static TurtleApplication instance = null;
 
@@ -36,9 +39,11 @@ public class TurtleApplication extends Application {
 	}
 
 	public void showErrorMessage(Exception exception) {
+		StringWriter writer = new StringWriter();
+		exception.printStackTrace(new PrintWriter(writer));
+
 		ErrorMessageDialog messageDialog = new ErrorMessageDialog(stage);
-		messageDialog.setTitle(exception.getMessage());
-		messageDialog.setMessage(exception.toString());
+		messageDialog.setMessage(exception.getMessage() + "\n" + writer.toString());
 		messageDialog.show();
 	}
 
