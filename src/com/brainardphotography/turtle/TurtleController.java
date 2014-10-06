@@ -112,7 +112,7 @@ public class TurtleController implements Initializable {
 		File file = fileChooser.showOpenDialog(TurtleApplication.getInstance().getStage());
 
 		if (file != null && file.exists()) {
-			this.program = new GroovyTurtleProgram(this.turtle, file);
+			this.program = new GroovyTurtleProgram(this.turtle, this.canvas, file);
 			this.program.setErrorConsumer(exception -> TurtleApplication.getInstance().showErrorMessageSafe(exception));
 		}
 

@@ -1,12 +1,16 @@
 package com.brainardphotography.turtle;
 
 import groovy.lang.Script;
+import javafx.scene.canvas.Canvas;
+
+import java.math.BigDecimal;
 
 /**
  * Created by johnbrainard on 10/4/14.
  */
 public abstract class TurtleScript extends Script {
 	private Turtle turtle = null;
+	private Canvas canvas = null;
 
 	private Turtle getTurtle() {
 		if (turtle == null)
@@ -15,31 +19,38 @@ public abstract class TurtleScript extends Script {
 		return turtle;
 	}
 
-	public void move(Integer value) {
+	private Canvas getCanvas() {
+		if (canvas == null)
+			canvas = (Canvas) getBinding().getVariable("canvas");
+
+		return canvas;
+	}
+
+	public void move(Number value) {
 		Turtle turtle = getTurtle();
-		turtle.move(value);
+		turtle.move(value.intValue());
 		while (turtle.isMoving())
 			Thread.yield();
 	}
 
-	public void run(int value) {
+	public void run(Number value) {
 		Turtle turtle = getTurtle();
-		turtle.run(value);
+		turtle.run(value.intValue());
 		while (turtle.isMoving())
 			Thread.yield();
 	}
 
-	public void turn(Integer value) {
+	public void turn(Number value) {
 		Turtle turtle = getTurtle();
-		turtle.turn(value);
+		turtle.turn(value.intValue());
 		while (turtle.isTurning())
 			Thread.yield();
 	}
 
-	public void turnAndMove(int turnAmount, int moveAmount) {
+	public void turnAndMove(Number turnAmount, Number moveAmount) {
 		Turtle turtle = getTurtle();
-		turtle.turn(turnAmount);
-		turtle.move(moveAmount);
+		turtle.turn(turnAmount.intValue());
+		turtle.move(moveAmount.intValue());
 		while (turtle.isTurning() || turtle.isMoving())
 			Thread.yield();
 	}
@@ -66,6 +77,34 @@ public abstract class TurtleScript extends Script {
 		while (turtle.isMoving()) {
 			Thread.yield();
 		}
+	}
+
+	public int getWorldWidth() {
+		return new Double(getCanvas().getWidth()).intValue();
+	}
+
+	public int getWorldHeight() {
+		return new Double(getCanvas().getHeight()).intValue();
+	}
+
+	public int getTurtleWidth() {
+		return new Double(getTurtle().getWidth()).intValue();
+	}
+
+	public int getTurtleHeight() {
+		return new Double(getTurtle().getHeight()).intValue();
+	}
+
+	public int getTurtleAngle() {
+		return new Double(getTurtle().getAngle()).intValue();
+	}
+
+	public int getX() {
+		return new Double(getTurtle().getX()).intValue();
+	}
+
+	public int getY() {
+		return new Double(getTurtle().getY()).intValue();
 	}
 
 	public boolean isMoving() {

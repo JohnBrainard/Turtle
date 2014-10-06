@@ -34,6 +34,26 @@ public class Turtle extends TurtleObject {
 		this.height = turtle.getHeight();
 	}
 
+	public double getX() {
+		return x;
+	}
+
+	public double getY() {
+		return y;
+	}
+
+	public double getWidth() {
+		return turtle.getWidth();
+	}
+
+	public double getHeight() {
+		return turtle.getHeight();
+	}
+
+	public double getAngle() {
+		return angle;
+	}
+
 	public void setObjectConsumer(Consumer<TurtleObject> objectConsumer) {
 		this.objectConsumer = objectConsumer;
 	}

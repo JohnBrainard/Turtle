@@ -1,5 +1,7 @@
 package com.brainardphotography.turtle;
 
+import javafx.scene.canvas.Canvas;
+
 import java.io.IOException;
 import java.util.function.Consumer;
 
@@ -8,9 +10,11 @@ import java.util.function.Consumer;
  */
 public class TurtleProgram implements Runnable {
 	private final Turtle turtle;
+	private final Canvas canvas;
 
-	public TurtleProgram(Turtle turtle) {
+	public TurtleProgram(Turtle turtle, Canvas canvas) {
 		this.turtle = turtle;
+		this.canvas = canvas;
 	}
 	private Consumer<Exception> errorConsumer;
 
@@ -38,4 +42,5 @@ public class TurtleProgram implements Runnable {
 	protected Turtle getTurtle() {
 		return this.turtle;
 	}
+	protected Canvas getCanvas() { return this.canvas; }
 }
