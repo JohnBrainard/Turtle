@@ -7,8 +7,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -18,27 +19,23 @@ import java.util.ResourceBundle;
 /**
  * Created by johnbrainard on 10/5/14.
  */
-public class ErrorMessageDialog implements Initializable {
+public class HelpDialog implements Initializable {
 	private final Stage primaryStage;
 	private final Stage dialogStage;
 
-	private StringProperty messageProperty = new SimpleStringProperty("Error Message");
-
 	@FXML
-	TextArea titleLabel;
+	WebView webView;
 
-	@FXML
-	TextArea messageArea;
-
-	public ErrorMessageDialog(Stage primaryStage) {
+	public HelpDialog(Stage primaryStage) {
 		this.primaryStage = primaryStage;
 
 		dialogStage = new Stage();
-		dialogStage.setResizable(true);
+		dialogStage.setResizable(false);
 		dialogStage.initOwner(primaryStage);
 		dialogStage.centerOnScreen();
+		dialogStage.setTitle("Help");
 
-		FXMLLoader fxml = new FXMLLoader(getClass().getResource("ErrorMessage.fxml"));
+		FXMLLoader fxml = new FXMLLoader(getClass().getResource("Help.fxml"));
 		fxml.setController(this);
 		Parent root = null;
 		try {
@@ -50,21 +47,10 @@ public class ErrorMessageDialog implements Initializable {
 		dialogStage.setScene(new Scene(root));
 	}
 
-	public StringProperty messageProperty() {
-		return messageProperty;
-	}
-
-	public String getMessage() {
-		return messageProperty.getValue();
-	}
-
-	public void setMessage(String value) {
-		messageProperty.setValue(value);
-	}
-
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
-		messageArea.textProperty().bind(messageProperty);
+		WebEngine engine = webView.getEngine();
+		engine.load(getClass().getResource("Help.html").toString());
 	}
 
 	public void show() {
@@ -76,8 +62,4 @@ public class ErrorMessageDialog implements Initializable {
 		dialogStage.close();
 	}
 
-	@FXML
-	public void showHelp() {
-
-	}
 }

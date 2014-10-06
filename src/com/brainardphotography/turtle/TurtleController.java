@@ -125,6 +125,12 @@ public class TurtleController implements Initializable {
 		TurtleApplication.getInstance().getStage().close();
 	}
 
+	@FXML
+	public void showHelp() {
+		HelpDialog helpDialog = new HelpDialog(TurtleApplication.getInstance().getStage());
+		helpDialog.show();
+	}
+
 	public void resetScene() {
 		this.turtle.reset(50.0, 50.0);
 		this.turtleObjects.clear();
