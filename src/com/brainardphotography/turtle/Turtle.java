@@ -82,8 +82,8 @@ public class Turtle extends TurtleObject {
 			this.moveRange = moveRange;
 			this.angleRange = angleRange;
 		} else {
-			this.moveRange = Range.emptyRange();
-			this.angleRange = Range.emptyRange();
+			this.moveRange = new Range(this.moveRange.getCurrent(), this.moveRange.getCurrent(), 0);
+			this.angleRange = new Range(this.angleRange.getCurrent(), this.angleRange.getCurrent(), 0);
 			System.out.println("Can't go there!:(");
 		}
 	}
