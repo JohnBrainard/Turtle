@@ -74,7 +74,7 @@ public class Turtle extends TurtleObject {
 			moveRange.next();
 		}
 
-		Rectangle2D position = new Rectangle2D(x - width / 2, y - height / 2, width, height);
+		Rectangle2D position = new Rectangle2D(newX - width / 2, newY - height / 2, width, height);
 		if (predicate.test(position)) {
 			x = newX;
 			y = newY;
