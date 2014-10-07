@@ -63,7 +63,7 @@ public class Range implements Iterator<Double> {
 	}
 
 	public boolean hasNext() {
-		return step < steps;
+		return steps != 0 && step < steps;
 	}
 
 	public static Range emptyRange() {
@@ -79,7 +79,7 @@ public class Range implements Iterator<Double> {
 	}
 
 	public String toString() {
-		return String.format("Range[from:%f,to:%f,steps:%d,step%d,current%f]",
+		return String.format("Range[from:%f,to:%f,steps:%d,step:%d,current%f]",
 				from,
 				to,
 				steps,
