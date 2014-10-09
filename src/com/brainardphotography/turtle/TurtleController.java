@@ -3,6 +3,7 @@ package com.brainardphotography.turtle;
 import com.beust.jcommander.internal.Lists;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.binding.BooleanExpression;
 import javafx.beans.binding.ObjectExpression;
 import javafx.beans.property.BooleanProperty;
@@ -66,6 +67,12 @@ public class TurtleController implements Initializable {
 		turtle = new Turtle(50.0, 50.0);
 		turtle.setObjectConsumer(object -> turtleObjects.add(object));
 
+		String lastScript = TurtleApplication.getInstance().getLastScriptPath();
+		System.out.println("Found last script path " + lastScript);
+		if (lastScript != null) {
+			openScriptFile(new File(lastScript));
+		}
+
 		draw(canvas.getGraphicsContext2D());
 	}
 
@@ -111,12 +118,9 @@ public class TurtleController implements Initializable {
 		fileChooser.setTitle("Open Groovy Script");
 		File file = fileChooser.showOpenDialog(TurtleApplication.getInstance().getStage());
 
-		if (file != null && file.exists()) {
-			this.program = new GroovyTurtleProgram(this.turtle, this.canvas, file);
-			this.program.setErrorConsumer(exception -> TurtleApplication.getInstance().showErrorMessageSafe(exception));
+		if (file != null) {
+			openScriptFile(file);
 		}
-
-		scriptProperty.setValue(file);
 	}
 
 	@FXML
@@ -137,8 +141,8 @@ public class TurtleController implements Initializable {
 
 		double wallHeight = canvas.getHeight() / 2 - 100;
 
-		turtleObjects.add(new Wall(canvas.getWidth() / 2 - 20, 0, 40, wallHeight));
-		turtleObjects.add(new Wall(canvas.getWidth() / 2 - 20, canvas.getHeight() - wallHeight, 40, wallHeight));
+//		turtleObjects.add(new Wall(canvas.getWidth() / 2 - 20, 0, 40, wallHeight));
+//		turtleObjects.add(new Wall(canvas.getWidth() / 2 - 20, canvas.getHeight() - wallHeight, 40, wallHeight));
 //		turtleObjects.add(Wall.randomWall(canvas));
 	}
 
@@ -173,5 +177,23 @@ public class TurtleController implements Initializable {
 	private void scriptPropertyChanged(ObservableValue<? extends File> observableValue, File oldValue, File newValue) {
 		runButton.setDisable(newValue == null || !newValue.exists());
 		statusLabel.setText(newValue == null ? "" : "Running: " + newValue.toString());
+	}
+
+	private void openScriptFile(File scriptFile) {
+		final TurtleApplication application = TurtleApplication.getInstance();
+
+		application.getExecutorService().submit(() -> {
+			if (scriptFile.exists()) {
+				TurtleProgram program = new GroovyTurtleProgram(this.turtle, this.canvas, scriptFile);
+				program.setErrorConsumer(exception -> application.showErrorMessageSafe(exception));
+				program.setErrorConsumer(exception -> TurtleApplication.getInstance().showErrorMessageSafe(exception));
+
+				Platform.runLater(() -> {
+					this.program = program;
+					this.scriptProperty.setValue(scriptFile);
+					TurtleApplication.getInstance().setLastScriptPath(scriptFile.getAbsolutePath());
+				});
+			}
+		});
 	}
 }
