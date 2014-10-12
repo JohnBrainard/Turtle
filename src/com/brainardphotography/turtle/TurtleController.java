@@ -16,12 +16,16 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 
+import javax.swing.event.MenuEvent;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -47,6 +51,9 @@ public class TurtleController implements Initializable {
 	@FXML
 	Canvas canvas;
 
+	@FXML
+	MenuItem editFileMenuItem;
+
 	ObjectProperty<File> scriptProperty = new SimpleObjectProperty<File>();
 	BooleanProperty runningProperty = new SimpleBooleanProperty();
 
@@ -68,6 +75,8 @@ public class TurtleController implements Initializable {
 
 		turtle = new Turtle(50.0, 50.0);
 		turtle.setObjectConsumer(object -> turtleObjects.add(object));
+
+		editFileMenuItem.disableProperty().bind(ObjectExpression.objectExpression(scriptProperty).isNull());
 
 		String lastScript = TurtleApplication.getInstance().getLastScriptPath();
 		System.out.println("Found last script path " + lastScript);
@@ -123,6 +132,18 @@ public class TurtleController implements Initializable {
 
 		if (file != null) {
 			openScriptFile(file);
+		}
+	}
+
+	@FXML
+	public void editFile()
+	{
+		if (scriptProperty.getValue() != null) {
+			try {
+				Desktop.getDesktop().open(scriptProperty.getValue());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

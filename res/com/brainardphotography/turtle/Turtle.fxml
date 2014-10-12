@@ -18,6 +18,7 @@
 						<Menu mnemonicParsing="false" text="File">
 							<items>
 								<MenuItem mnemonicParsing="false" onAction="#openFile" text="Select Program"/>
+								<MenuItem mnemonicParsing="false" onAction="#editFile" text="Edit Program" fx:id="editFileMenuItem"/>
 								<MenuItem mnemonicParsing="false" onAction="#run" text="Run"/>
 								<MenuItem mnemonicParsing="false" onAction="#quit" text="Close"/>
 							</items>
