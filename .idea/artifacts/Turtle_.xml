@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
-  <artifact type="javafx" build-on-make="true" name="Turtle!">
-    <output-path>$PROJECT_DIR$/out/artifacts/Turtle_</output-path>
+  <artifact type="javafx" name="Turtle!">
+    <output-path>$PROJECT_DIR$/out/artifacts/Turtle</output-path>
     <properties id="javafx-properties">
       <options>
         <option name="appClass" value="com.brainardphotography.turtle.TurtleApplication" />
