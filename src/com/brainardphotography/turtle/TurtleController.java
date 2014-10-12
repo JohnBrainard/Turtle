@@ -3,6 +3,9 @@ package com.brainardphotography.turtle;
 import com.beust.jcommander.internal.Lists;
 import com.brainardphotography.turtle.objects.CenterLinesObject;
 import com.brainardphotography.turtle.objects.TurtleObject;
+import com.brainardphotography.turtle.scenes.CenterLinesScene;
+import com.brainardphotography.turtle.scenes.WallsScene;
+import com.brainardphotography.turtle.scenes.WorldScene;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.beans.binding.BooleanExpression;
@@ -54,6 +57,7 @@ public class TurtleController implements Initializable {
 	MenuItem editFileMenuItem;
 
 	ObjectProperty<File> scriptProperty = new SimpleObjectProperty<File>();
+	ObjectProperty<WorldScene> sceneProperty = new SimpleObjectProperty<>();
 	BooleanProperty runningProperty = new SimpleBooleanProperty();
 
 	AnimationTimer animationTimer;
@@ -82,6 +86,14 @@ public class TurtleController implements Initializable {
 		if (lastScript != null) {
 			openScriptFile(new File(lastScript));
 		}
+
+		sceneProperty.addListener((observable, oldValue, newValue) -> {
+			resetScene();
+		});
+
+		WorldScene scene = new WallsScene();
+		scene.setCanvas(canvas);
+		sceneProperty.setValue(scene);
 
 		draw(canvas.getGraphicsContext2D());
 	}
@@ -162,12 +174,21 @@ public class TurtleController implements Initializable {
 		this.turtle.reset(50.0, 50.0);
 		this.turtleObjects.clear();
 
-		double wallHeight = canvas.getHeight() / 2 - 100;
+		WorldScene scene = sceneProperty.getValue();
+		if (scene != null) {
+			turtleObjects.addAll(scene.createObjects());
+		}
 
-		turtleObjects.add(new CenterLinesObject(canvas));
-//		turtleObjects.add(new WallObject(canvas.getWidth() / 2 - 20, 0, 40, wallHeight));
-//		turtleObjects.add(new WallObject(canvas.getWidth() / 2 - 20, canvas.getHeight() - wallHeight, 40, wallHeight));
-//		turtleObjects.add(WallObject.randomWall(canvas));
+		drawScene(scene, canvas.getGraphicsContext2D());
+	}
+
+	private void drawScene(WorldScene scene, GraphicsContext gc) {
+		gc.setFill(scene.getBackground());
+
+		turtleObjects.stream().forEach(o -> {
+			o.updatePosition(rect -> checkRect(rect));
+			o.draw(gc);
+		});
 	}
 
 	private void draw(GraphicsContext gc) {
@@ -176,10 +197,7 @@ public class TurtleController implements Initializable {
 
 		gc.save();
 
-		for (TurtleObject object : turtleObjects) {
-			object.updatePosition(rect -> checkRect(rect));
-			object.draw(gc);
-		}
+		drawScene(sceneProperty.getValue(), gc);
 
 		turtle.updatePosition(rect -> checkRect(rect));
 		turtle.draw(gc);
