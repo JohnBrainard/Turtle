@@ -1,7 +1,8 @@
 package com.brainardphotography.turtle;
 
+import com.brainardphotography.turtle.objects.TurtleObject;
+import com.brainardphotography.turtle.objects.TurtlePoopObject;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.transform.Rotate;
@@ -123,7 +124,7 @@ public class Turtle extends TurtleObject {
 		double x = this.x - Math.sin(r) * 50;
 		double y = this.y - Math.cos(r) * 50;
 
-		objectConsumer.accept(new TurtlePoop(x, y));
+		objectConsumer.accept(new TurtlePoopObject(x, y));
 	}
 
 	public void reset(double x, double y) {

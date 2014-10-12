@@ -1,8 +1,9 @@
 package com.brainardphotography.turtle;
 
 import com.beust.jcommander.internal.Lists;
+import com.brainardphotography.turtle.objects.CenterLinesObject;
+import com.brainardphotography.turtle.objects.TurtleObject;
 import javafx.animation.AnimationTimer;
-import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.binding.BooleanExpression;
 import javafx.beans.binding.ObjectExpression;
@@ -16,7 +17,6 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
@@ -24,7 +24,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 
-import javax.swing.event.MenuEvent;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -165,9 +164,10 @@ public class TurtleController implements Initializable {
 
 		double wallHeight = canvas.getHeight() / 2 - 100;
 
-//		turtleObjects.add(new Wall(canvas.getWidth() / 2 - 20, 0, 40, wallHeight));
-//		turtleObjects.add(new Wall(canvas.getWidth() / 2 - 20, canvas.getHeight() - wallHeight, 40, wallHeight));
-//		turtleObjects.add(Wall.randomWall(canvas));
+		turtleObjects.add(new CenterLinesObject(canvas));
+//		turtleObjects.add(new WallObject(canvas.getWidth() / 2 - 20, 0, 40, wallHeight));
+//		turtleObjects.add(new WallObject(canvas.getWidth() / 2 - 20, canvas.getHeight() - wallHeight, 40, wallHeight));
+//		turtleObjects.add(WallObject.randomWall(canvas));
 	}
 
 	private void draw(GraphicsContext gc) {

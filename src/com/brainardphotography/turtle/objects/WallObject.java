@@ -1,4 +1,4 @@
-package com.brainardphotography.turtle;
+package com.brainardphotography.turtle.objects;
 
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
@@ -12,7 +12,7 @@ import java.util.Random;
 /**
  * Created by johnbrainard on 10/5/14.
  */
-public class Wall extends TurtleObject {
+public class WallObject extends TurtleObject {
 	private static Random random = new Random();
 
 	public enum Orientation {
@@ -29,12 +29,12 @@ public class Wall extends TurtleObject {
 
 	private Rectangle2D rect;
 
-	public Wall(double x, double y, double width, double height) {
+	public WallObject(double x, double y, double width, double height) {
 		this.rect = new Rectangle2D(x, y, width, height);
 	}
 
 	@Override
-	void draw(GraphicsContext gc) {
+	public void draw(GraphicsContext gc) {
 		gc.save();
 		gc.setFill(Color.BISQUE);
 		gc.fillRect(rect.getMinX(), rect.getMinY(), rect.getWidth(), rect.getHeight());
@@ -46,7 +46,7 @@ public class Wall extends TurtleObject {
 		return rect;
 	}
 
-	public static Wall randomWall(Canvas canvas) {
+	public static WallObject randomWall(Canvas canvas) {
 		Orientation orientation = Orientation.random();
 		double width = orientation == Orientation.Horizontal ? random.nextDouble() * (canvas.getWidth() / 2.0) : 40.0;
 		double height = orientation == Orientation.Vertical ? random.nextDouble() * (canvas.getHeight() / 2.0) : 40.0;
@@ -54,6 +54,6 @@ public class Wall extends TurtleObject {
 		double x = random.nextDouble() * (canvas.getWidth() - (width * 2)) + height;
 		double y = random.nextDouble() * (canvas.getHeight() - (height * 2)) + height;
 
-		return new Wall(x, y, width, height);
+		return new WallObject(x, y, width, height);
 	}
 }

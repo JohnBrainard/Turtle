@@ -1,4 +1,4 @@
-package com.brainardphotography.turtle;
+package com.brainardphotography.turtle.objects;
 
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -21,7 +21,7 @@ public abstract class TurtleObject {
 		// Do nothing... Base object doesn't need to move
 	}
 
-	abstract void draw(GraphicsContext gc);
+	public abstract void draw(GraphicsContext gc);
 
 	public Rectangle2D getRect() {
 		return Rectangle2D.EMPTY;
