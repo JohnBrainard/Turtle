@@ -95,7 +95,7 @@ public abstract class TurtleScript extends Script {
 		return new Double(getTurtle().getHeight()).intValue();
 	}
 
-	public int getTurtleAngle() {
+	public int getAngle() {
 		return new Double(getTurtle().getAngle()).intValue();
 	}
 
