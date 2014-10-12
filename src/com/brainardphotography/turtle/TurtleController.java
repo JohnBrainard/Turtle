@@ -52,12 +52,14 @@ public class TurtleController implements Initializable {
 
 	AnimationTimer animationTimer;
 
+	private TurtleApplication application;
 	private Turtle turtle;
 	private TurtleProgram program = null;
 	private List<TurtleObject> turtleObjects;
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
+		application = TurtleApplication.getInstance();
 		runButton.disableProperty().bind(BooleanExpression.booleanExpression(runningProperty)
 						.or(ObjectExpression.objectExpression(scriptProperty).isNull()));
 		stopButton.disableProperty().bind(BooleanExpression.booleanExpression(runningProperty).not());
@@ -115,6 +117,7 @@ public class TurtleController implements Initializable {
 	public void openFile()
 	{
 		FileChooser fileChooser = new FileChooser();
+		fileChooser.setInitialDirectory(application.getConfiguration().getProgramsPath().toFile());
 		fileChooser.setTitle("Open Groovy Script");
 		File file = fileChooser.showOpenDialog(TurtleApplication.getInstance().getStage());
 

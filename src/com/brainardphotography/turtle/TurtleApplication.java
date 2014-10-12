@@ -7,6 +7,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.concurrent.ExecutorService;
@@ -22,6 +23,7 @@ public class TurtleApplication extends Application {
 	private Stage stage;
 	private Preferences preferences;
 	private ExecutorService executorService;
+	private ApplicationConfiguration configuration;
 
 	public static TurtleApplication getInstance() {
 		return instance;
@@ -38,26 +40,27 @@ public class TurtleApplication extends Application {
 
 		preferences = Preferences.userNodeForPackage(TurtleApplication.class);
 		executorService = Executors.newSingleThreadExecutor();
+		configuration = new ApplicationConfiguration();
 
 		instance = this;
 		this.stage = primaryStage;
 
-        Parent root = FXMLLoader.load(getClass().getResource("Turtle.fxml"));
-        primaryStage.setTitle("Turtle!");
-		primaryStage.setScene(new Scene(root));
-		primaryStage.setResizable(false);
-        primaryStage.show();
+		configuration.loadConfiguration(executorService, () -> {
+			try {
+				Parent root = FXMLLoader.load(getClass().getResource("Turtle.fxml"));
+				primaryStage.setTitle("Turtle!");
+				primaryStage.setScene(new Scene(root));
+				primaryStage.setResizable(false);
+				primaryStage.show();
+			} catch (IOException ex) {
+				ex.printStackTrace(System.err);
+			}
+		});
 
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
 			public void run() {
-				try {
-					System.out.println("Syncing preferences");
-					preferences.flush();
-					executorService.shutdown();
-				} catch (BackingStoreException e) {
-					e.printStackTrace();
-				}
+				shutdown();
 			}
 		});
 	}
@@ -75,6 +78,10 @@ public class TurtleApplication extends Application {
 		return this.executorService;
 	}
 
+	public ApplicationConfiguration getConfiguration() {
+		return configuration;
+	}
+
 	public String getLastScriptPath() {
 		return preferences.get(PREF_LAST_SCRIPT_PATH, null);
 	}
@@ -86,6 +93,16 @@ public class TurtleApplication extends Application {
 
 	public void showErrorMessageSafe(Exception exception) {
 		Platform.runLater(() -> showErrorMessage(exception));
+	}
+
+	private void shutdown() {
+		executorService.shutdown();
+
+		try {
+			preferences.flush();
+		} catch (BackingStoreException e) {
+			e.printStackTrace();
+		}
 	}
 
     public static void main(String[] args) {
