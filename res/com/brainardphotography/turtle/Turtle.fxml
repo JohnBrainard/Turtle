@@ -7,6 +7,7 @@
 <?import javafx.scene.layout.*?>
 
 <?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.input.KeyCodeCombination?>
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
 			xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
 			fx:controller="com.brainardphotography.turtle.TurtleController">
@@ -20,7 +21,11 @@
 								<MenuItem mnemonicParsing="false" onAction="#openFile" text="Select Program"/>
 								<MenuItem mnemonicParsing="false" onAction="#editFile" text="Edit Program" fx:id="editFileMenuItem"/>
 								<MenuItem mnemonicParsing="false" onAction="#run" text="Run"/>
-								<MenuItem mnemonicParsing="false" onAction="#quit" text="Close"/>
+								<MenuItem mnemonicParsing="false" onAction="#quit" text="Close">
+									<accelerator>
+										<KeyCodeCombination alt="UP" code="Q" control="UP" meta="DOWN" shift="UP" shortcut="UP" />
+									</accelerator>
+								</MenuItem>
 							</items>
 						</Menu>
 						<Menu mnemonicParsing="false" text="Help">

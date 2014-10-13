@@ -35,6 +35,8 @@ public class TurtleApplication extends Application {
 
 	@Override
     public void start(Stage primaryStage) throws Exception {
+		Platform.setImplicitExit(false);
+
 		if (instance != null)
 			throw new IllegalStateException("TurtleApplication can only have one instance");
 
@@ -51,16 +53,10 @@ public class TurtleApplication extends Application {
 				primaryStage.setTitle("Turtle!");
 				primaryStage.setScene(new Scene(root));
 				primaryStage.setResizable(false);
+				primaryStage.setOnCloseRequest(e -> exit());
 				primaryStage.show();
 			} catch (IOException ex) {
 				ex.printStackTrace(System.err);
-			}
-		});
-
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			@Override
-			public void run() {
-				shutdown();
 			}
 		});
 	}
@@ -95,14 +91,19 @@ public class TurtleApplication extends Application {
 		Platform.runLater(() -> showErrorMessage(exception));
 	}
 
-	private void shutdown() {
-		executorService.shutdown();
+	public void close() {
+		exit();
+	}
 
+	private void exit() {
+		executorService.shutdown();
 		try {
 			preferences.flush();
 		} catch (BackingStoreException e) {
 			e.printStackTrace();
 		}
+		stage.close();
+		Platform.exit();
 	}
 
     public static void main(String[] args) {

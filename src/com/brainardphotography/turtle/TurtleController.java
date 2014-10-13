@@ -161,7 +161,7 @@ public class TurtleController implements Initializable {
 	@FXML
 	public void quit()
 	{
-		TurtleApplication.getInstance().getStage().close();
+		TurtleApplication.getInstance().close();
 	}
 
 	@FXML
