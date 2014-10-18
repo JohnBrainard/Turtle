@@ -55,6 +55,8 @@ public class DefaultWorldScene implements WorldScene {
 	@Override
 	public void reset() {
 		this.turtle = createTurtle();
+		turtle.setObjectConsumer(o -> addWorldObject(o));
+
 		worldObjects.clear();
 		worldObjects.addAll(createObjects());
 		drawScene(canvas.getGraphicsContext2D());
