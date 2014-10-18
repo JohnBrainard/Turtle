@@ -1,29 +1,29 @@
 package com.brainardphotography.turtle.scenes;
 
+import com.brainardphotography.turtle.Turtle;
 import com.brainardphotography.turtle.objects.TurtleObject;
+import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
  * Created by johnbrainard on 10/12/14.
  */
-public abstract class WorldScene {
-	private Canvas canvas;
+public interface WorldScene {
+	public void addWorldObject(TurtleObject worldObject);
+	public void addWorldObjects(Collection<TurtleObject> worldObjects);
 
-	public Canvas getCanvas() {
-		return canvas;
-	}
+	public double getWidth();
+	public double getHeight();
 
-	public void setCanvas(Canvas canvas) {
-		this.canvas = canvas;
-	}
+	public void initialize(Canvas canvas);
+	public void draw();
+	public void reset();
 
-	public Paint getBackground() {
-		return Color.BLACK;
-	}
-
-	public abstract List<TurtleObject> createObjects();
+	public Turtle getTurtle();
 }

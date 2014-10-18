@@ -2,6 +2,7 @@ package com.brainardphotography.turtle;
 
 import com.brainardphotography.turtle.objects.TurtleObject;
 import com.brainardphotography.turtle.objects.TurtlePoopObject;
+import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -132,5 +133,12 @@ public class Turtle extends TurtleObject {
 		angleRange = Range.emptyRange();
 		this.x = x;
 		this.y = y;
+	}
+
+	public void reset(Point2D location, double angle) {
+		this.x = location.getX();
+		this.y = location.getY();
+		this.angleRange = new Range(angle, angle, 0);
+		this.moveRange = Range.emptyRange();
 	}
 }

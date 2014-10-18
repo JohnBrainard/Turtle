@@ -13,8 +13,8 @@ import java.io.IOException;
 public class GroovyTurtleProgram extends TurtleProgram {
 	private final File scriptLocation;
 
-	public GroovyTurtleProgram(Turtle turtle, Canvas canvas, File scriptLocation) {
-		super(turtle, canvas);
+	public GroovyTurtleProgram(File scriptLocation) {
+		super();
 
 		this.scriptLocation = scriptLocation;
 	}
@@ -24,10 +24,10 @@ public class GroovyTurtleProgram extends TurtleProgram {
 		CompilerConfiguration cc = new CompilerConfiguration();
 		cc.setScriptBaseClass(TurtleScript.class.getName());
 		GroovyShell shell = new GroovyShell(cc);
-		shell.setVariable("turtle", getTurtle());
-		shell.setVariable("canvas", getCanvas());
+		shell.setVariable("scene", getScene());
 		try {
-			shell.run(scriptLocation, new String[] {});
+			TurtleScript script = (TurtleScript) shell.parse(scriptLocation);
+			script.run();
 		} catch (Exception e) {
 			handleError(e);
 		}

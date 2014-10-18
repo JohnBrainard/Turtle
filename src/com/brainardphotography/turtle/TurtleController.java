@@ -3,9 +3,7 @@ package com.brainardphotography.turtle;
 import com.beust.jcommander.internal.Lists;
 import com.brainardphotography.turtle.objects.CenterLinesObject;
 import com.brainardphotography.turtle.objects.TurtleObject;
-import com.brainardphotography.turtle.scenes.CenterLinesScene;
-import com.brainardphotography.turtle.scenes.WallsScene;
-import com.brainardphotography.turtle.scenes.WorldScene;
+import com.brainardphotography.turtle.scenes.*;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.beans.binding.BooleanExpression;
@@ -17,6 +15,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -63,21 +62,14 @@ public class TurtleController implements Initializable {
 	AnimationTimer animationTimer;
 
 	private TurtleApplication application;
-	private Turtle turtle;
 	private TurtleProgram program = null;
-	private List<TurtleObject> turtleObjects;
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
 		application = TurtleApplication.getInstance();
 		runButton.disableProperty().bind(BooleanExpression.booleanExpression(runningProperty)
-						.or(ObjectExpression.objectExpression(scriptProperty).isNull()));
+				.or(ObjectExpression.objectExpression(scriptProperty).isNull()));
 		stopButton.disableProperty().bind(BooleanExpression.booleanExpression(runningProperty).not());
-
-		turtleObjects = Lists.newArrayList();
-
-		turtle = new Turtle(50.0, 50.0);
-		turtle.setObjectConsumer(object -> turtleObjects.add(object));
 
 		editFileMenuItem.disableProperty().bind(ObjectExpression.objectExpression(scriptProperty).isNull());
 
@@ -87,15 +79,13 @@ public class TurtleController implements Initializable {
 			openScriptFile(new File(lastScript));
 		}
 
+		WorldScene scene = new RandomStartingPointScene();
+		scene.initialize(this.canvas);
+
 		sceneProperty.addListener((observable, oldValue, newValue) -> {
-			resetScene();
+			newValue.reset();
 		});
-
-		WorldScene scene = new WallsScene();
-		scene.setCanvas(canvas);
 		sceneProperty.setValue(scene);
-
-		draw(canvas.getGraphicsContext2D());
 	}
 
 	@FXML
@@ -109,12 +99,13 @@ public class TurtleController implements Initializable {
 		if (animationTimer != null)
 			animationTimer.stop();
 
-		resetScene();
+		final WorldScene scene = sceneProperty.getValue();
+		program.setScene(scene);
 
 		animationTimer = new AnimationTimer() {
 			@Override
 			public void handle(long l) {
-				draw(canvas.getGraphicsContext2D());
+				scene.draw();
 			}
 		};
 
@@ -131,6 +122,7 @@ public class TurtleController implements Initializable {
 		if (animationTimer != null)
 			animationTimer.stop();
 		runningProperty.setValue(false);
+		sceneProperty.getValue().reset();
 	}
 
 	@FXML
@@ -170,52 +162,6 @@ public class TurtleController implements Initializable {
 		helpDialog.show();
 	}
 
-	public void resetScene() {
-		this.turtle.reset(50.0, 50.0);
-		this.turtleObjects.clear();
-
-		WorldScene scene = sceneProperty.getValue();
-		if (scene != null) {
-			turtleObjects.addAll(scene.createObjects());
-		}
-
-		drawScene(scene, canvas.getGraphicsContext2D());
-	}
-
-	private void drawScene(WorldScene scene, GraphicsContext gc) {
-		gc.setFill(scene.getBackground());
-
-		turtleObjects.stream().forEach(o -> {
-			o.updatePosition(rect -> checkRect(rect));
-			o.draw(gc);
-		});
-	}
-
-	private void draw(GraphicsContext gc) {
-		gc.setFill(Color.BLACK);
-		gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-
-		gc.save();
-
-		drawScene(sceneProperty.getValue(), gc);
-
-		turtle.updatePosition(rect -> checkRect(rect));
-		turtle.draw(gc);
-		gc.restore();
-	}
-
-	private boolean checkRect(Rectangle2D rect) {
-		Rectangle2D canvasRect = new Rectangle2D(0, 0, canvas.getWidth(), canvas.getHeight());
-
-		if (!canvasRect.contains(rect))
-			return false;
-
-		if (turtleObjects.stream().anyMatch(o -> o.getRect() != null && o.getRect().intersects(rect)))
-			return false;
-
-		return true;
-	}
-
 	private void scriptPropertyChanged(ObservableValue<? extends File> observableValue, File oldValue, File newValue) {
 		runButton.setDisable(newValue == null || !newValue.exists());
 		statusLabel.setText(newValue == null ? "" : "Running: " + newValue.toString());
@@ -226,7 +172,7 @@ public class TurtleController implements Initializable {
 
 		application.getExecutorService().submit(() -> {
 			if (scriptFile.exists()) {
-				TurtleProgram program = new GroovyTurtleProgram(this.turtle, this.canvas, scriptFile);
+				TurtleProgram program = new GroovyTurtleProgram(scriptFile);
 				program.setErrorConsumer(exception -> application.showErrorMessageSafe(exception));
 				program.setErrorConsumer(exception -> TurtleApplication.getInstance().showErrorMessageSafe(exception));
 

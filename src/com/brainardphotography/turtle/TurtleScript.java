@@ -1,5 +1,6 @@
 package com.brainardphotography.turtle;
 
+import com.brainardphotography.turtle.scenes.WorldScene;
 import groovy.lang.Script;
 import javafx.scene.canvas.Canvas;
 
@@ -10,20 +11,18 @@ import java.math.BigDecimal;
  */
 public abstract class TurtleScript extends Script {
 	private Turtle turtle = null;
-	private Canvas canvas = null;
+	private WorldScene scene = null;
 
 	private Turtle getTurtle() {
 		if (turtle == null)
-			turtle = (Turtle) getBinding().getVariable("turtle");
-
+			turtle = getScene().getTurtle();
 		return turtle;
 	}
 
-	private Canvas getCanvas() {
-		if (canvas == null)
-			canvas = (Canvas) getBinding().getVariable("canvas");
-
-		return canvas;
+	private WorldScene getScene() {
+		if (scene == null)
+			scene = (WorldScene) getBinding().getVariable("scene");
+		return scene;
 	}
 
 	public void move(Number value) {
@@ -80,11 +79,11 @@ public abstract class TurtleScript extends Script {
 	}
 
 	public int getWorldWidth() {
-		return new Double(getCanvas().getWidth()).intValue();
+		return new Double(getScene().getWidth()).intValue();
 	}
 
 	public int getWorldHeight() {
-		return new Double(getCanvas().getHeight()).intValue();
+		return new Double(getScene().getHeight()).intValue();
 	}
 
 	public int getTurtleWidth() {
