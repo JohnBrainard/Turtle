@@ -14,9 +14,17 @@ public class RandomStartingPointScene extends DefaultWorldScene {
 
 	@Override
 	protected Turtle createTurtle() {
-		return new Turtle(
-				Math.random() * getWidth(),
-				Math.random() * getHeight());
+		Turtle turtle = new Turtle(0, 0);
+
+		double widthRange = getWidth() - turtle.getWidth();
+		double heightRange = getHeight() - turtle.getHeight();
+
+		turtle.reset(
+				Math.random() * widthRange + (turtle.getWidth() / 2),
+				Math.random() * heightRange + (turtle.getHeight() / 2)
+		);
+
+		return turtle;
 	}
 
 	@Override
