@@ -1,6 +1,7 @@
 package com.brainardphotography.turtle.scenes;
 
 import com.brainardphotography.turtle.Turtle;
+import com.brainardphotography.turtle.TurtleApplication;
 import com.brainardphotography.turtle.objects.TurtleObject;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
@@ -71,6 +72,10 @@ public class DefaultWorldScene implements WorldScene {
 
 		GraphicsContext gc = canvas.getGraphicsContext2D();
 		drawScene(gc);
+	}
+
+	public void alert(String message) {
+		TurtleApplication.getInstance().showMessageSafe(message);
 	}
 
 	protected void drawScene(GraphicsContext gc) {

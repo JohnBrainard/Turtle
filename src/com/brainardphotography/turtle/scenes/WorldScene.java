@@ -26,4 +26,5 @@ public interface WorldScene {
 	public void reset();
 
 	public Turtle getTurtle();
+	public void alert(String message);
 }

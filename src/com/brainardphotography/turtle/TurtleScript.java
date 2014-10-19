@@ -113,4 +113,8 @@ public abstract class TurtleScript extends Script {
 	public boolean isTurning() {
 		return getTurtle().isTurning();
 	}
+
+	public void alert(String message) {
+		getScene().alert(message);
+	}
 }

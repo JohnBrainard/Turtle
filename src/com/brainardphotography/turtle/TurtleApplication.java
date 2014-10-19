@@ -70,6 +70,12 @@ public class TurtleApplication extends Application {
 		messageDialog.show();
 	}
 
+	public void showMessage(String message) {
+		AlertDialog alert = new AlertDialog(stage);
+		alert.setMessage(message);
+		alert.show();
+	}
+
 	public ExecutorService getExecutorService() {
 		return this.executorService;
 	}
@@ -89,6 +95,10 @@ public class TurtleApplication extends Application {
 
 	public void showErrorMessageSafe(Exception exception) {
 		Platform.runLater(() -> showErrorMessage(exception));
+	}
+
+	public void showMessageSafe(String message) {
+		Platform.runLater(() -> showMessage(message));
 	}
 
 	public void close() {
