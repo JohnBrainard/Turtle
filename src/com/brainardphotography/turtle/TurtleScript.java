@@ -117,4 +117,30 @@ public abstract class TurtleScript extends Script {
 	public void alert(String message) {
 		getScene().alert(message);
 	}
+
+	public Number abs(Number value) {
+		if (value instanceof Double)
+			return Math.abs(value.doubleValue());
+		else if (value instanceof Long)
+			return Math.abs(value.longValue());
+		else if (value instanceof Float)
+			return Math.abs(value.floatValue());
+		else if (value instanceof Integer)
+			return Math.abs(value.intValue());
+		else
+			alert("Can't get absolute value of: " + value);
+		return 0;
+	}
+
+	public Number remainder(Number dividend, Number divisor) {
+		if (dividend instanceof Double)
+			return dividend.doubleValue() % divisor.doubleValue();
+		else if (dividend instanceof Long)
+			return dividend.longValue() % divisor.longValue();
+		else if (dividend instanceof Float)
+			return dividend.floatValue() % divisor.floatValue();
+		else if (dividend instanceof Integer)
+			return dividend.intValue() % divisor.intValue();
+		return 0;
+	}
 }
